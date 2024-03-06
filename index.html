@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <title>Hologram Mold Web Edition</title> 
+  </head>
+  <body>
+	<!--This draws the canvas on the webpage -->
+    <canvas id="mycanvas"></canvas> 
+  </body>
+ 
+  <!-- Include the processing.js library -->
+  <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+  <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  <script>
+  var programCode = function(processingInstance) {
+    with (processingInstance) {
+      size(400, 400); 
+      frameRate(30);
+      
+      /*For this program to work, you will need a hologram projector. It doesn't project real holograms, but it looks like it does, hence the name. You can learn how to make one with household items online (shorturl.at/aszQS), but if you don't have one, don't blame me if this program is useless to you. 
+
+This is optional but it will help make your holograph run better: fill in the variables below. Note that all of your images must have the same proportion between height and width. If you are animating a custom hologram, make sure to use the Frames Per Second (FPS) meter to change how fast your animation will be. If you put it too fast for your comuputer, it will run at its max speed, which can crash your computer (but it isn't as bad as it might sound). Also, change guidelines to true to show lines to put your hologram projector in the right spot*/
+
+var guidelines = false;
+var hologramProjectorBottomSize = 140;
+var FPS = 1;
+
+/*If you'd like to draw a custom holograph, use the array below. Each function is a frame that will be drawn four times in a circle.*/
+
+var holograph = [
+function() {
+    fill(255, 255, 255);
+    stroke(0, 0, 0);
+    ellipse(0, 0, 10, 10);/*(0, 0) is in the middle of the line of the square.*/
+},
+function() {
+    fill(255, 255, 255);
+    stroke(0, 0, 0);
+    rect(0, -60, 10, 10);/*Negative Y is still up though, but then it is also left and right and down since it is rotated 90 degrees 4 times.*/
+}
+];
+
+
+/*If you go below here you might ruin the code, but you can always reload the page again, although it won't save your progress.*/
+
+var hSize = hologramProjectorBottomSize;/*Shorthand*/
+        
+frameRate(FPS);
+
+var framesDrawn = 0;
+var imagesDrawnInASquare = 0;
+
+draw = function() {
+    if(framesDrawn >= holograph.length) { /*If there are no more frames left to draw*/
+        framesDrawn = 0; /*Start over from the first frame.*/
+    }
+    background(0, 0, 0);
+    imagesDrawnInASquare = 0; /*The images drawn in a square have all been covered.*/
+    pushMatrix();
+    translate(width/2, height/2);
+    while(imagesDrawnInASquare < 4) {
+        pushMatrix();
+        translate(0, -(hSize/2));
+        holograph[framesDrawn]();
+        popMatrix();
+        rotate(radians(90));
+        imagesDrawnInASquare += 1;
+    }
+    popMatrix();
+    
+    if(guidelines) {
+        fill(0, 0, 0, 0);/*Transparent*/
+        stroke(255, 255, 255, 255);
+        rect((width/2)-(hSize/2), (height/2)-(hSize/2), hSize, hSize);
+    }
+    
+    framesDrawn += 1;
+};
+
+    }};
+
+  // Get the canvas that ProcessingJS will use
+  var canvas = document.getElementById("mycanvas"); 
+  // Pass the function to ProcessingJS constructor
+  var processingInstance = new Processing(canvas, programCode); 
+  </script>
+</html>
